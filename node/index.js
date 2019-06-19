@@ -1,5 +1,9 @@
 var app = require("express")();
 var bodyParser = require("body-parser");
+// 数据库链接
+var mysql      = require('mysql');
+var config = require("./backstage/mysql/sqlConfig")
+
 // 仓库
 var store = require("./store/index.js")
 // 是否安装
@@ -22,25 +26,56 @@ app.all('*', function (req, res, next) {
 // 验证是否需要安装
 app.get("/ver",function(request,response){
     console.log(installBel.isBel)
-    if(installBel.isBel == false){
+    if(installBel.isBel === false){
         response.send({
             msg:"1000",
             message:"未安装"
         })
-    }else if(installBel.isBel == true){
+    }else if(installBel.isBel === true){
         response.send({
             msg:"10004",
-            message:"已安装"        })
+            message:"已安装"
+          })
     }
 })
 // 安装接口
 app.post("/install",function(request,response){
     var req = request;
     var res = response;
-    install(req.body,function(e){
-        console.log(e)
-    })
-    // console.log()
-
+    var test = function(resolve,reject){
+      install(req.body,function(e){
+        if(e == "ok"){
+          resolve('200 OK');
+        }else{
+          reject("err")
+        }
+      })
+    }
+  new Promise(test).then((result)=>{
+  var connection = mysql.createConnection(config)
+   connection.connect(function(err,data){
+        if(err){
+          res.send({
+            msg:1004,
+            message:"链接错误"
+          })
+          console.log(err)
+          return
+        }
+      var installBel = `module.exports = {isBel:true}`
+      fs.writeFile("./store/install.js",installBel,function(){
+        res.send({
+          meg:1000,
+          message:"正在安装中"
+        })
+      })
+   })
+    
+  }).catch((reject)=>{
+    console.log(reject)
+  })
+ 
+     
+ 
 })
 app.listen(1080)

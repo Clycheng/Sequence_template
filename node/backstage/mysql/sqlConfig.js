@@ -1,1 +1,1 @@
-module.exports = { host: "locahost",user :  "root",password : "root",database : "zhibao"}
+module.exports = { host: "47.98.213.151",user :  "root",password : "koAHBo7gLX8IOyXc",database : "zhibao"}
