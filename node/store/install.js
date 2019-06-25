@@ -1,1 +1,1 @@
-module.exports = {isBel:true}
+module.exports = {isBel:false}

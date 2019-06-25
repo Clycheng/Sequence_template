@@ -8,6 +8,7 @@ var config = require("./backstage/mysql/sqlConfig")
 var store = require("./store/index.js")
 // 是否安装
 var installBel = require("./store/install.js")
+var createBase = require("./backstage/mysql/createBase")
 var fs = require("fs")
 app.use(bodyParser.urlencoded({
   extended: false
@@ -64,6 +65,9 @@ app.post("/install",function(request,response){
         }
       var installBel = `module.exports = {isBel:true}`
       fs.writeFile("./store/install.js",installBel,function(){
+        createBase(function(e){
+          console.log(e)
+        })
         res.send({
           meg:1000,
           message:"正在安装中"
