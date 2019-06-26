@@ -2,6 +2,7 @@
   <div class="warp">
     <el-steps :active="active" finish-status="success">
       <el-step title="数据库信息"></el-step>
+       <el-step title="超级管理员设置"></el-step>
       <el-step title="安装完成"></el-step>
     </el-steps>
     <el-row :gutter="20">
@@ -43,12 +44,18 @@
 " placeholder="请输入表名" v-model="from.dataBase" clearable></el-input>
       </el-col>
     </el-row>
-
+    <el-row class = "btn-next">
+      <el-col :span = "24">
+    <el-button style="margin-top: 12px;" v-if="active !=0" @click="last">上一步</el-button>
     <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+        
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import { constants } from 'crypto';
 export default {
   name: "Install",
   data() {
@@ -59,12 +66,32 @@ export default {
         password: "",
         dataBase: ""
       },
-      active: 0
+      active: 0,
+      isInstall:true
     };
   },
   methods: {
     next() {
       if (this.active++ > 2) this.active = 0;
+      console.log(this.from)
+      // console.log(this.$ajax)
+      this.$ajax.get("http://localhost:1080/ver").then((res)=>{
+        console.log(res.data)
+        if(res.data.msg == 1000 ){
+          this.isInstall = false
+        }else if(res.data.msg == 10004){
+          this.isInstall = true
+        }
+      }).then(()=>{
+        if(!this.isInstall){
+          console.log("未安装")
+        }else{
+          console.log("可以安装")
+        }
+      })
+    },
+    last(){
+      // this.active --
     }
   }
 };
@@ -93,5 +120,8 @@ export default {
   line-height: 36px;
   text-align: center;
   font-size: 14px;
+}
+.btn-next{
+  text-align: center
 }
 </style>
