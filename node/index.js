@@ -43,41 +43,49 @@ app.get("/ver",function(request,response){
 app.post("/install",function(request,response){
     var req = request;
     var res = response;
-    var test = function(resolve,reject){
-      install(req.body,function(e){
-        if(e == "ok"){
-          resolve('200 OK');
-        }else{
-          reject("err")
-        }
-      })
-    }
-  new Promise(test).then((result)=>{
-  var connection = mysql.createConnection(config)
-   connection.connect(function(err,data){
-        if(err){
-          res.send({
-            msg:1004,
-            message:"链接错误"
+    var data = '';
+    req.on("data",function(chunk){
+      data +=chunk
+      console.log(data)
+      data = JSON.parse(data)
+      var test = function(resolve,reject){
+        install(data,function(e){
+          if(e == "ok"){
+            resolve('200 OK');
+          }else{
+            reject("err")
+          }
+        })
+      }
+    new Promise(test).then((result)=>{
+      console.log(config)
+    var connection = mysql.createConnection(config)
+     connection.connect(function(err,data){
+          if(err){
+            res.send({
+              msg:1004,
+              message:"链接错误"
+            })
+            console.log(err)
+            return
+          }
+        var installBel = `module.exports = {isBel:true}`
+        fs.writeFile("./store/install.js",installBel,function(){
+          createBase(function(e){
+            console.log(e)
           })
-          console.log(err)
-          return
-        }
-      var installBel = `module.exports = {isBel:true}`
-      fs.writeFile("./store/install.js",installBel,function(){
-        createBase(function(e){
-          console.log(e)
+          res.send({
+            meg:1000,
+            message:"正在安装中"
+          })
         })
-        res.send({
-          meg:1000,
-          message:"正在安装中"
-        })
-      })
-   })
-    
-  }).catch((reject)=>{
-    console.log(reject)
-  })
+     })
+      
+    }).catch((reject)=>{
+      console.log(reject)
+    })
+    })
+   
  
      
  
