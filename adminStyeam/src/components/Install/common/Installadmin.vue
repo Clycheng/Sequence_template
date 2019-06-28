@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="15">
         <el-input prefix-icon="el-icon-s-custom
-" placeholder="请输入用户名" v-model= "$store.state.Install.mysqlFrom.admin"></el-input>
+" placeholder="请输入用户名" v-model= "$store.state.Install.adminFrom.admin"></el-input>
       </el-col>
     </el-row>
     <el-row  :gutter="20">
@@ -14,7 +14,7 @@
         <div class="grid-content bg-purple">数据库密码</div>
       </el-col>
       <el-col :span="15">
-        <el-input prefix-icon="el-icon-view" placeholder="请输入密码" v-model= "$store.state.Install.mysqlFrom.password" show-password></el-input>
+        <el-input prefix-icon="el-icon-view" placeholder="请输入密码" v-model= "$store.state.Install.adminFrom.password" show-password></el-input>
       </el-col>
     </el-row>
     <el-row  :gutter="20">
@@ -23,7 +23,7 @@
       </el-col>
       <el-col :span="15">
         <el-input prefix-icon="el-icon-document
-" placeholder="请输入表名" v-model= "$store.state.Install.mysqlFrom.phone" clearable></el-input>
+" placeholder="请输入表名" v-model= "$store.state.Install.adminFrom.phone" clearable></el-input>
       </el-col>
     </el-row>
   </div>

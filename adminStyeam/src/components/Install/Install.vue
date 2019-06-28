@@ -41,47 +41,66 @@ export default {
   },
   methods: {
     next() {
-      // switch (this.active) {
-      //   case '0':this.addMysql;
-      //   case '1':alert(this.active);
-      //   case '2':alert(this.active);
-      // }
+      switch (this.active) {
+        case 0:
+          this.addMysql(this.active);
+          break;
+        case 1:
+           this.addAdmin(this.active);
+          break;
+        case 2:
+          this.complete(this.active);
+          break;
+      }
       // if (this.active++ > 2) this.active = 0;
-
-      // 数据库请求方法
-       
     },
     last() {
       this.active--;
       this.$store.state.Install.isInstalladmin = false;
     },
-    addMysql(){
- for (let item in this.$store.state.Install.mysqlFrom) {
-          if (this.$store.state.Install.mysqlFrom[item] == "") {
-            alert("必填信息不能为空");
-            return;
-          } else {
-            this.$ajax
-              .post(
-                "http://localhost:1080/install",
-                this.$store.state.Install.mysqlFrom
-              )
-              .then(res => {
-                console.log(res);
-                if (res.data.msg == 1004) {
-                  this.$message({
-                    message: "链接失败，请检查信息是否正确",
-                    type: "warning"
-                  });
-                } else if ((res.data.msg = 1000)) {
-                  this.active++;
-                  this.$store.state.Install.isInstalladmin = true;
-                }
-              });
-            return;
-          }
+    // 添加数据库信息
+    addMysql() {
+      for (let item in this.$store.state.Install.mysqlFrom) {
+        if (this.$store.state.Install.mysqlFrom[item] == "") {
+          alert("必填信息不能为空");
+          return;
+        } else {
+          this.$ajax
+            .post(
+              "http://localhost:1080/install",
+              this.$store.state.Install.mysqlFrom
+            )
+            .then(res => {
+              console.log(res);
+              if (res.data.msg == 1004) {
+                this.$message({
+                  message: "链接失败，请检查信息是否正确",
+                  type: "warning"
+                });
+              } else if ((res.data.msg = 1000)) {
+                this.active++;
+                this.$store.state.Install.isInstalladmin = true;
+              }
+            });
+          return;
         }
-      
+      }
+    },
+    // 添加超级管理员
+    addAdmin(){
+      this.active ++;
+      alert('添加管理员')
+    },
+    // 完成
+    complete(){
+      this.active ++;
+      this.$router.push({
+        path:'/',
+        query:{
+          admin:"admin",
+          password:this.$store.state.Install.adminFrom.password
+        }
+      })
     }
   }
 };
